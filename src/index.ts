@@ -1649,15 +1649,6 @@ function FlatpickrInstance(
           (minRange > 0 && timestamp < minRange) ||
           (maxRange > 0 && timestamp > maxRange);
 
-        console.log({
-          containsDisabled,
-          outOfRange,
-          day: dayElem.textContent,
-          minRange,
-          maxRange,
-          timestamp,
-        });
-
         if (outOfRange) {
           // dayElem.classList.add("notAllowed");
           ["inRange", "startRange", "endRange"].forEach(c => {
@@ -1665,7 +1656,6 @@ function FlatpickrInstance(
           });
           continue;
         } else if (containsDisabled && !outOfRange) {
-          console.log({ timestamp, minRange });
           // dayElem.classList.add("inRange");
           continue;
         }
@@ -1693,12 +1683,8 @@ function FlatpickrInstance(
             )
           ) {
             if (initialDate < hoverDate && timestamp === initialDate) {
-              console.log("startRange:");
-              console.log({ date, dayElem });
               dayElem.classList.add("startRange");
             } else if (initialDate > hoverDate && timestamp === initialDate) {
-              console.log("endRange:");
-              console.log({ date, dayElem });
               dayElem.classList.add("endRange");
             }
 
@@ -1707,7 +1693,6 @@ function FlatpickrInstance(
               (maxRange === 0 || timestamp <= maxRange) &&
               isBetween(timestamp, initialDate, hoverDate)
             ) {
-              // console.log({ date, dayElem });
               dayElem.classList.add("inRange");
             }
           }
