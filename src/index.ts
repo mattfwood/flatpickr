@@ -1609,9 +1609,9 @@ function FlatpickrInstance(
       return;
 
     const hoverDate = elem
-        ? elem.dateObj.getTime()
-        : (<DayElement>self.days.firstElementChild).dateObj.getTime(),
-      initialDate = (self.parseDate(
+      ? elem.dateObj.getTime()
+      : (<DayElement>self.days.firstElementChild).dateObj.getTime();
+    const initialDate = (self.parseDate(
         self.selectedDates[0],
         undefined,
         true
@@ -1628,8 +1628,7 @@ function FlatpickrInstance(
 
     for (let t = rangeStartDate; t < lastDate; t += duration.DAY) {
       if (!isEnabled(new Date(t), true)) {
-        containsDisabled =
-          containsDisabled || (t > rangeStartDate && t < rangeEndDate);
+        containsDisabled = t > rangeStartDate && t < rangeEndDate;
 
         if (t < initialDate && (!minRange || t > minRange)) minRange = t;
         else if (t > initialDate && (!maxRange || t < maxRange)) maxRange = t;
@@ -1650,13 +1649,26 @@ function FlatpickrInstance(
           (minRange > 0 && timestamp < minRange) ||
           (maxRange > 0 && timestamp > maxRange);
 
+        console.log({
+          containsDisabled,
+          outOfRange,
+          day: dayElem.textContent,
+          minRange,
+          maxRange,
+          timestamp,
+        });
+
         if (outOfRange) {
-          dayElem.classList.add("notAllowed");
+          // dayElem.classList.add("notAllowed");
           ["inRange", "startRange", "endRange"].forEach(c => {
             dayElem.classList.remove(c);
           });
           continue;
-        } else if (containsDisabled && !outOfRange) continue;
+        } else if (containsDisabled && !outOfRange) {
+          console.log({ timestamp, minRange });
+          // dayElem.classList.add("inRange");
+          continue;
+        }
 
         ["startRange", "inRange", "endRange", "notAllowed"].forEach(c => {
           dayElem.classList.remove(c);
@@ -1664,9 +1676,12 @@ function FlatpickrInstance(
 
         if (elem !== undefined) {
           elem.classList.add(
+            // if the hover date is less than the current date
             hoverDate < self.selectedDates[0].getTime()
-              ? "startRange"
-              : "endRange"
+              ? // then make the hover date the start range
+                "startRange"
+              : // otherwise make it the end date
+                "endRange"
           );
 
           if (
@@ -1677,17 +1692,24 @@ function FlatpickrInstance(
               (<DayElement>prevMonth.lastChild).dateObj.getTime() >= timestamp
             )
           ) {
-            if (initialDate < hoverDate && timestamp === initialDate)
+            if (initialDate < hoverDate && timestamp === initialDate) {
+              console.log("startRange:");
+              console.log({ date, dayElem });
               dayElem.classList.add("startRange");
-            else if (initialDate > hoverDate && timestamp === initialDate)
+            } else if (initialDate > hoverDate && timestamp === initialDate) {
+              console.log("endRange:");
+              console.log({ date, dayElem });
               dayElem.classList.add("endRange");
+            }
 
             if (
               timestamp >= minRange &&
               (maxRange === 0 || timestamp <= maxRange) &&
               isBetween(timestamp, initialDate, hoverDate)
-            )
+            ) {
+              // console.log({ date, dayElem });
               dayElem.classList.add("inRange");
+            }
           }
         }
       }
