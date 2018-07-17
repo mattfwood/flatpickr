@@ -1454,14 +1454,6 @@
                 date = dayElem.dateObj;
             var timestamp = date.getTime();
             var outOfRange = minRange > 0 && timestamp < minRange || maxRange > 0 && timestamp > maxRange;
-            console.log({
-              containsDisabled: containsDisabled,
-              outOfRange: outOfRange,
-              day: dayElem.textContent,
-              minRange: minRange,
-              maxRange: maxRange,
-              timestamp: timestamp
-            });
 
             if (outOfRange) {
               ["inRange", "startRange", "endRange"].forEach(function (c) {
@@ -1469,10 +1461,6 @@
               });
               return "continue";
             } else if (containsDisabled && !outOfRange) {
-              console.log({
-                timestamp: timestamp,
-                minRange: minRange
-              });
               return "continue";
             }
 
@@ -1485,18 +1473,8 @@
 
               if (month.contains(elem) || !(m > 0 && prevMonth && prevMonth.lastChild.dateObj.getTime() >= timestamp)) {
                 if (initialDate < hoverDate && timestamp === initialDate) {
-                  console.log("startRange:");
-                  console.log({
-                    date: date,
-                    dayElem: dayElem
-                  });
                   dayElem.classList.add("startRange");
                 } else if (initialDate > hoverDate && timestamp === initialDate) {
-                  console.log("endRange:");
-                  console.log({
-                    date: date,
-                    dayElem: dayElem
-                  });
                   dayElem.classList.add("endRange");
                 }
 
